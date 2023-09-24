@@ -12,6 +12,9 @@ class SongActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySongBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.songDownIb.setOnClickListener{
+            finish()
+        }
     }
 
 }
