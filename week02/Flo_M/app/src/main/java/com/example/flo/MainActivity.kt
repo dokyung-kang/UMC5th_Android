@@ -4,11 +4,14 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import com.example.flo.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
+
+    val DETAIL_ACTIVITY_CODE = 100
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,7 +25,8 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, SongActivity::class.java)
             intent.putExtra("title", song.title)
             intent.putExtra("singer", song.singer)
-            startActivity(intent)
+//            startActivity(intent)
+            startActivityForResult(intent, DETAIL_ACTIVITY_CODE)
         }
 
         initBottomNavigation()
@@ -30,6 +34,16 @@ class MainActivity : AppCompatActivity() {
         Log.d("Song", song.title + song.singer)
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when(requestCode){
+            DETAIL_ACTIVITY_CODE -> {
+                if(resultCode == RESULT_OK){
+                    val result = data?.getStringExtra(("result_data"))
+                    Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
     private fun initBottomNavigation(){
 
         supportFragmentManager.beginTransaction()

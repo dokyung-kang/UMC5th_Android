@@ -1,5 +1,6 @@
 package com.example.flo
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -16,6 +17,9 @@ class SongActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.songDownIb.setOnClickListener{
+            val resultIntent = Intent()
+            resultIntent.putExtra("result_data", binding.songMusicTitleTv.text)
+            setResult(RESULT_OK, resultIntent)
             finish()
         }
         binding.songMiniplayerIv.setOnClickListener {
