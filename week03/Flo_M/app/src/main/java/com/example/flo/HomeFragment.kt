@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.example.flo.databinding.FragmentHomeBinding
+import me.relex.circleindicator.CircleIndicator3
 
 class HomeFragment : Fragment() {
 
@@ -44,6 +45,9 @@ class HomeFragment : Fragment() {
         pannelAdapter.addFragment(PannelFragment(R.drawable.img_first_album_default))
         binding.homePannelBackgroundVp.adapter = pannelAdapter
         binding.homePannelBackgroundVp.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+
+        val pannelIndicator = binding.homePannelIndicator
+        pannelIndicator.setViewPager(binding.homePannelBackgroundVp)
 
         return binding.root
     }
