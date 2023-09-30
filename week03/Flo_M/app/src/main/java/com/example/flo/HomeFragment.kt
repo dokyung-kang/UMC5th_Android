@@ -1,6 +1,9 @@
 package com.example.flo
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +15,8 @@ import me.relex.circleindicator.CircleIndicator3
 class HomeFragment : Fragment() {
 
     lateinit var binding: FragmentHomeBinding
+
+    var currentPage = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,6 +54,36 @@ class HomeFragment : Fragment() {
         val pannelIndicator = binding.homePannelIndicator
         pannelIndicator.setViewPager(binding.homePannelBackgroundVp)
 
+        val thread = Thread(PagerRunnable())
+        thread.start()
+
         return binding.root
     }
+
+    inner class PagerRunnable:Runnable{
+        override fun run() {
+            while(true){
+                try {
+                    Thread.sleep(2000)
+                    handler.sendEmptyMessage(0)
+                } catch (e : InterruptedException){
+                    Log.d("interupt", "interupt발생")
+                }
+            }
+        }
+    }
+
+    val handler = Handler(Looper.getMainLooper()){
+        setPage()
+        true
+    }
+
+    fun setPage(){
+        if(currentPage == 6)
+            currentPage = 0
+        binding.homePannelBackgroundVp.setCurrentItem(currentPage, true)
+        currentPage += 1
+    }
+
+
 }
