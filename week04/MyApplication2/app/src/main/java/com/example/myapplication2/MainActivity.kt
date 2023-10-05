@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(R.layout.activity_main)
+        setContentView(binding.root)
 
         // 핸들러 만들어줌
         val handler = Handler(Looper.getMainLooper())
@@ -35,8 +35,7 @@ class MainActivity : AppCompatActivity() {
         // 1. 핸들러 만들어야 함
         Thread {
             for(image in imageList){
-                handler.post{
-                    // 여기서 작성한 코드가 Main thread로 전달되어 뷰렌더링 작업이 Main thread에서 오류없이 실행됨
+                runOnUiThread{
                     binding.iv.setImageResource(image)
                 }
                 Thread.sleep(2000)
