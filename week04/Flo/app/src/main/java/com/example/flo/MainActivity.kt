@@ -15,13 +15,16 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val song = Song(binding.mainMinipalyerTitleTv.text.toString(), binding.mainMinipalyerSingerTv.text.toString())
+        val song = Song(binding.mainMinipalyerTitleTv.text.toString(), binding.mainMinipalyerSingerTv.text.toString(), 0, 60, false)
 
         binding.mainPlayerCl.setOnClickListener{
 //            startActivity(Intent(this, SongActivity::class.java))
             val intent = Intent(this, SongActivity::class.java)
             intent.putExtra("title", song.title)
             intent.putExtra("singer", song.singer)
+            intent.putExtra("second", song.second)
+            intent.putExtra("playTime", song.playTime)
+            intent.putExtra("isPlaying", song.isPlaying)
             startActivity(intent)
         }
 
