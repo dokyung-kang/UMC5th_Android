@@ -78,7 +78,8 @@ class SongActivity : AppCompatActivity() {
                 intent.getIntExtra("second", 0),
                 intent.getIntExtra("playTime", 0),
                 intent.getBooleanExtra("isPlaying", false),
-                intent.getStringExtra("music")!!
+                intent.getStringExtra("music")!!,
+                intent.getBooleanExtra("isRepeating", false)
             )
         }
         startTimer()
@@ -129,7 +130,16 @@ class SongActivity : AppCompatActivity() {
                 while(true){
 
                     if(second >= playTime){
-                        break
+                        if (song.isRepeating) {
+                            // 반복 재생이 켜져 있다면 쓰레드 재시작
+                            mills = 0f
+                            second = 0
+                            mediaPlayer?.seekTo(0)
+                            mediaPlayer?.start()
+                        } else {
+                            mediaPlayer?.pause()
+                            break
+                        }
                     }
 
                     if(isPlaying){
@@ -156,6 +166,8 @@ class SongActivity : AppCompatActivity() {
     }
 
     fun setRepeatStatus(isRepeating : Boolean){
+        song.isRepeating = isRepeating
+
         if(isRepeating){
             binding.songRepeatOnIv.visibility = View.VISIBLE
             binding.songRepeatIv.visibility = View.GONE
