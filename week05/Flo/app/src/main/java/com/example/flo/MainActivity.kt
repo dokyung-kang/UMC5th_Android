@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val song = Song(binding.mainMinipalyerTitleTv.text.toString(), binding.mainMinipalyerSingerTv.text.toString(), 0, 60, false)
+        val song = Song(binding.mainMinipalyerTitleTv.text.toString(), binding.mainMinipalyerSingerTv.text.toString(), 0, 60, false, "music_lilac")
 
         binding.mainPlayerCl.setOnClickListener{
 //            startActivity(Intent(this, SongActivity::class.java))
@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra("second", song.second)
             intent.putExtra("playTime", song.playTime)
             intent.putExtra("isPlaying", song.isPlaying)
+            intent.putExtra("music", song.music)
             startActivity(intent)
         }
 
