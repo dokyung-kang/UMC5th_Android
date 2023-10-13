@@ -35,6 +35,12 @@ class SongActivity : AppCompatActivity() {
         binding.songPauseIv.setOnClickListener {
             setPlayerStatus(false)
         }
+        binding.songRepeatIv.setOnClickListener {
+            setRepeatStatus(true)
+        }
+        binding.songRepeatOnIv.setOnClickListener {
+            setRepeatStatus(false)
+        }
 
     }
     // 사용자가 포커스를 잃었을 때 음악이 중지
@@ -65,7 +71,8 @@ class SongActivity : AppCompatActivity() {
                 intent.getIntExtra("second", 0),
                 intent.getIntExtra("playTime", 0),
                 intent.getBooleanExtra("isPlaying", false),
-                intent.getStringExtra("music")!!
+                intent.getStringExtra("music")!!,
+                intent.getBooleanExtra("isRepeating", false)
             )
         }
         startTimer()
@@ -100,6 +107,19 @@ class SongActivity : AppCompatActivity() {
         }
     }
 
+    fun setRepeatStatus(isRepeating : Boolean){
+        song.isRepeating = isRepeating
+
+        if(isRepeating){
+            binding.songRepeatOnIv.visibility = View.VISIBLE
+            binding.songRepeatIv.visibility = View.GONE
+        }
+        else {
+            binding.songRepeatOnIv.visibility = View.GONE
+            binding.songRepeatIv.visibility = View.VISIBLE
+        }
+    }
+
     private fun startTimer(){
         timer = Timer(song.playTime, song.isPlaying)
         timer.start()
@@ -115,7 +135,16 @@ class SongActivity : AppCompatActivity() {
                 while(true){
 
                     if(second >= playTime){
-                        break
+                        if (song.isRepeating) {
+                            // 반복 재생이 켜져 있다면 쓰레드 재시작
+                            mills = 0f
+                            second = 0
+                            mediaPlayer?.seekTo(0)
+                            mediaPlayer?.start()
+                        } else {
+                            mediaPlayer?.pause()
+                            break
+                        }
                     }
 
                     if(isPlaying){

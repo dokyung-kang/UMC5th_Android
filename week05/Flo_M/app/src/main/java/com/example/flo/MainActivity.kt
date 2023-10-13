@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra("playTime", song.playTime)
             intent.putExtra("isPlaying", song.isPlaying)
             intent.putExtra("music", song.music)
+            intent.putExtra("isRepeating", song.isRepeating)
             startActivity(intent)
         }
 
@@ -92,7 +93,7 @@ class MainActivity : AppCompatActivity() {
         val songJson = sharedPreferences.getString("songData", null)
 
         song = if(songJson == null){
-            Song("라일락", "아이유(IU)", 0, 60, false, "music_lilac")
+            Song("라일락", "아이유(IU)", 0, 60, false, "music_lilac", false)
         } else{
             gson.fromJson(songJson, Song::class.java)
         }
