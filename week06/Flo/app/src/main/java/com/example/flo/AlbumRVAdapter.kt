@@ -11,6 +11,7 @@ class AlbumRVAdapter(private val albumList: ArrayList<Album>) : RecyclerView.Ada
     // 클릭 인터페이스 정의
     interface MyItemClickListener{
         fun onItemClick(album: Album)
+        fun onRemoveAlbum(position: Int)
     }
 
     // 리스너 객체를 전달받는 함수랑 리스너 객체를 저장할 변수
