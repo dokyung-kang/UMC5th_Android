@@ -35,6 +35,14 @@ class HomeFragment : Fragment() {
         // 리사이클러뷰에 어댑터를 연결
         binding.homeTodayMusicAlbumRv.adapter = albumRVAdapter
 
+        albumRVAdapter.setMyItemClickListener(object : AlbumRVAdapter.MyItemClickListener{
+            override fun onItemClick(album: Album) {
+                (context as MainActivity).supportFragmentManager.beginTransaction()
+                    .replace(R.id.main_frm, AlbumFragment())
+                    .commitAllowingStateLoss()
+            }
+        })
+
         val bannerAdapter = BannerVPAdapter(this)
         bannerAdapter.addFragment(BannerFragment(R.drawable.img_home_viewpager_exp))
         bannerAdapter.addFragment(BannerFragment(R.drawable.img_home_viewpager_exp2))
