@@ -30,6 +30,10 @@ class HomeFragment : Fragment() {
             add(Album("Weekend", "태연 (Tae Yeon)", R.drawable.img_album_exp6))
         }
 
+        // 더미데이터랑 Adapter 연결
+        val albumRVAdapter = AlbumRVAdapter(albumDatas)
+        // 리사이클러뷰에 어댑터를 연결
+        binding.homeTodayMusicAlbumRv.adapter = albumRVAdapter
 
         val bannerAdapter = BannerVPAdapter(this)
         bannerAdapter.addFragment(BannerFragment(R.drawable.img_home_viewpager_exp))
