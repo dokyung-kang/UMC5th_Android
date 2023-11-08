@@ -129,7 +129,7 @@ class SongActivity : AppCompatActivity() {
 
             layout.addView(iv)
             ts.view = layout
-            ts.setGravity(Gravity.CENTER, 0, -100);
+            ts.setGravity(Gravity.CENTER, 0, -100); 
             ts.show()
         }
 
