@@ -11,7 +11,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 
-class SignUpActivity : AppCompatActivity(){
+class SignUpActivity : AppCompatActivity() , SignUpView{
 
     lateinit var binding: ActivitySignupBinding
 
@@ -58,7 +58,7 @@ class SignUpActivity : AppCompatActivity(){
             Toast.makeText(this, "이메일 형식이 잘못되었습니다.", Toast.LENGTH_SHORT).show()
             return
         }
-
+        
         if (binding.signUpNameEt.text.toString().isEmpty()) {
             Toast.makeText(this, "이름 형식이 잘못되었습니다.", Toast.LENGTH_SHORT).show()
             return
@@ -69,28 +69,18 @@ class SignUpActivity : AppCompatActivity(){
             return
         }
 
-        val authService = getRetrofit().create(AuthRetrofitInterface::class.java)
 
-        authService.signUp(getUser()).enqueue(object: Callback<AuthResponse>{
-            override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
-                Log.d("SIGNUP-ACT/RESPONSE", response.toString())
+        val authService = AuthService()
+        authService.setSignUpView(this)
 
-                val resp: AuthResponse = response.body()!!
+        authService.signUp(getUser())
+    }
 
-                when(resp.code) {
-                    1000 -> finish()
-                    2016, 2018 -> {
-                        binding.signUpEmailErrorTv.text = resp.message
-                        binding.signUpEmailErrorTv.visibility = View.VISIBLE
-                    }
-                }
-            }
+    override fun onSignUpSuccess() {
+        finish()
+    }
 
-            override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
-                Log.d("SIGNUP-ACT/ERROR", t.message.toString())
-            }
-        })
-
-        Log.d("SIGNUP-ACT/ASYNC", "Hello, FLO")
+    override fun onSignUpFailure() {
+        //실패처리
     }
 }
