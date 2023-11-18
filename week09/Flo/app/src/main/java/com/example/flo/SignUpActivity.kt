@@ -58,7 +58,7 @@ class SignUpActivity : AppCompatActivity() , SignUpView{
             Toast.makeText(this, "이메일 형식이 잘못되었습니다.", Toast.LENGTH_SHORT).show()
             return
         }
-        
+
         if (binding.signUpNameEt.text.toString().isEmpty()) {
             Toast.makeText(this, "이름 형식이 잘못되었습니다.", Toast.LENGTH_SHORT).show()
             return
