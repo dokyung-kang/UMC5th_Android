@@ -36,15 +36,8 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        Log.d("MAIN/JWT_TO_SERVER", getJwt().toString())
-//        Log.d("Song", song.title + song.singer)
-    }
 
-
-    private fun getJwt(): String? {
-        val spf = this.getSharedPreferences("auth2" , AppCompatActivity.MODE_PRIVATE)
-
-        return spf!!.getString("jwt", "")
+        Log.d("Song", song.title + song.singer)
     }
 
     private fun initBottomNavigation(){
