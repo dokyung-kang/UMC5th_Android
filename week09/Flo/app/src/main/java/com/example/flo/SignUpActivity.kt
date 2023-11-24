@@ -10,7 +10,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class SignUpActivity : AppCompatActivity() {
+class SignUpActivity : AppCompatActivity(), SignUpView {
 
     lateinit var binding: ActivitySignupBinding
 
@@ -67,28 +67,42 @@ class SignUpActivity : AppCompatActivity() {
             return
         }
 
-        val authService = getRetrofit().create(AuthRetrofitInterface::class.java)
-        authService.signUp(getUser()).enqueue(object: Callback<AuthResponse>{
-            override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
-                Log.d("SIGNUP-ACT/RESPONSE", response.toString())
+//        val authService = getRetrofit().create(AuthRetrofitInterface::class.java)
+//        authService.signUp(getUser()).enqueue(object: Callback<AuthResponse>{
+//            override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
+//                Log.d("SIGNUP-ACT/RESPONSE", response.toString())
+//
+//                val resp: AuthResponse = response.body()!!
+//
+//                when(resp.code) {
+//                    1000 -> finish()
+//                    2016, 2018 -> {
+//                        binding.signUpEmailErrorTv.text = resp.message
+//                        binding.signUpEmailErrorTv.visibility = View.VISIBLE
+//                    }
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
+//                Log.d("SIGNUP-ACT/ERROR", t.message.toString())
+//            }
+//
+//        })
+//
+//        Log.d("SIGNUP-ACT/ASYNC", "Hello, FLO")
 
-                val resp: AuthResponse = response.body()!!
+        val authService = AuthService()
+        authService.setSignUpView(this)
 
-                when(resp.code) {
-                    1000 -> finish()
-                    2016, 2018 -> {
-                        binding.signUpEmailErrorTv.text = resp.message
-                        binding.signUpEmailErrorTv.visibility = View.VISIBLE
-                    }
-                }
-            }
+        authService.signUp(getUser())
+    }
 
-            override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
-                Log.d("SIGNUP-ACT/ERROR", t.message.toString())
-            }
+    override fun onSignUpSuccess() {
+        finish()
+    }
 
-        })
-
-        Log.d("SIGNUP-ACT/ASYNC", "Hello, FLO")
+    override fun onSignUpFailure(resp: AuthResponse) {
+        binding.signUpEmailErrorTv.text = resp.message
+        binding.signUpEmailErrorTv.visibility = View.VISIBLE
     }
 }
