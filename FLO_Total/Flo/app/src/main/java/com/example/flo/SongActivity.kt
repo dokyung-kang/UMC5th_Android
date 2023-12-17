@@ -3,7 +3,10 @@ package com.example.flo
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.View
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.flo.databinding.ActivitySongBinding
@@ -115,8 +118,28 @@ class SongActivity : AppCompatActivity() {
 
         if (!isLike){
             binding.songLikeIv.setImageResource(R.drawable.ic_my_like_on)
+
+            val ts = Toast.makeText(this,"",Toast.LENGTH_SHORT)
+            val layout = LinearLayout(this)
+            val iv = ImageView(this)
+            iv.setImageResource(R.drawable.ic_my_like_on)
+
+            layout.addView(iv)
+            ts.view = layout
+            ts.setGravity(Gravity.CENTER, 0, -100);
+            ts.show()
         } else{
             binding.songLikeIv.setImageResource(R.drawable.ic_my_like_off)
+
+            val ts = Toast.makeText(this,"",Toast.LENGTH_SHORT)
+            val layout = LinearLayout(this)
+            val iv = ImageView(this)
+            iv.setImageResource(R.drawable.ic_my_like_off)
+
+            layout.addView(iv)
+            ts.view = layout
+            ts.setGravity(Gravity.CENTER, 0, -100);
+            ts.show()
         }
 
     }

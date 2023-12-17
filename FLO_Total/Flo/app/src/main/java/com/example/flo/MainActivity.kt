@@ -1,18 +1,31 @@
 package com.example.flo
 
 import android.content.Intent
+import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.Toast
 import com.example.flo.databinding.ActivityMainBinding
 import com.google.gson.Gson
+import java.util.Timer
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
 
+    // 메인 미니바
+    lateinit var timer: Timer
+    private var mediaPlayer : MediaPlayer? = null
+
     private var song: Song = Song()
     private var gson: Gson = Gson()
+
+    // 메인 미니바
+    val songs = arrayListOf<Song>()
+    lateinit var songDB: SongDatabase
+    var nowPos = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +37,10 @@ class MainActivity : AppCompatActivity() {
 
         inputDummyAlbums()
         inputDummySongs()
+        // 메인 미니바
+        initPlayList()
+        initSong()
+        initClickListener()
         initBottomNavigation()
 
         binding.mainPlayerCl.setOnClickListener{
@@ -36,6 +53,86 @@ class MainActivity : AppCompatActivity() {
         }
 
         Log.d("Song", song.title + song.singer)
+    }
+
+    // 메인 미니바
+    override fun onDestroy() {
+        super.onDestroy()
+        timer.interrupt()
+        mediaPlayer?.release()
+        mediaPlayer = null
+    }
+
+    // 메인 미니바
+    private fun initPlayList(){
+        songDB = SongDatabase.getInstance(this)!!
+        songs.addAll(songDB.songDao().getSongs())
+    }
+
+    // 메인 미니바
+    private fun initClickListener(){
+        binding.mainMiniplayerBtn.setOnClickListener {
+            setPlayerStatus(true)
+        }
+
+        binding.mainPauseBtn.setOnClickListener {
+            setPlayerStatus(false)
+        }
+
+        binding.songNext.setOnClickListener {
+            moveSong(+1)
+        }
+
+        binding.songPrevious.setOnClickListener {
+            moveSong(-1)
+        }
+    }
+
+    // 메인 미니바
+    private fun initSong(){
+        val spf = getSharedPreferences("song", MODE_PRIVATE)
+        val songId = spf.getInt("songId",0)
+
+        nowPos = getPlayingSongPosition(songId)
+
+        Log.d("now Song ID",songs[nowPos].id.toString())
+
+        startTimer()
+        setMiniPlayer(songs[nowPos])
+    }
+
+    // 메인 미니바
+    private fun getPlayingSongPosition(songId: Int): Int{
+        for (i in 0 until songs.size){
+            if (songs[i].id == songId){
+                return i
+            }
+        }
+        return 0
+    }
+
+
+    // 메인 미니바
+    private fun moveSong(direct: Int){
+        if (nowPos + direct < 0){
+            Toast.makeText(this,"first song", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (nowPos + direct >= songs.size){
+            Toast.makeText(this,"last song", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        nowPos += direct
+
+        timer.interrupt()
+        startTimer()
+
+        mediaPlayer?.release()
+        mediaPlayer = null
+
+        setMiniPlayer(songs[nowPos])
     }
 
     private fun initBottomNavigation(){
@@ -81,6 +178,71 @@ class MainActivity : AppCompatActivity() {
         binding.mainMiniplayerTitleTv.text = song.title
         binding.mainMiniplayerSingerTv.text = song.singer
         binding.mainMiniplayerProgressSb.progress = (song.second*100000)/song.playTime
+        // 메인 미니바
+        val music = resources.getIdentifier(song.music, "raw", this.packageName)
+        mediaPlayer = MediaPlayer.create(this, music)
+
+        setPlayerStatus(song.isPlaying)
+    }
+
+    // 메인 미니바
+    fun setPlayerStatus(isPlaying : Boolean){
+        songs[nowPos].isPlaying = isPlaying
+        timer.isPlaying = isPlaying
+
+        if(isPlaying){
+            binding.mainMiniplayerBtn.visibility = View.GONE
+            binding.mainPauseBtn.visibility = View.VISIBLE
+            mediaPlayer?.start()
+        }
+        else {
+            binding.mainMiniplayerBtn.visibility = View.VISIBLE
+            binding.mainPauseBtn.visibility = View.GONE
+            if(mediaPlayer?.isPlaying == true){
+                mediaPlayer?.pause()
+            }
+        }
+    }
+
+    // 메인 미니바
+    private fun startTimer(){
+        timer = Timer(songs[nowPos].playTime, songs[nowPos].isPlaying)
+        timer.start()
+    }
+
+    // 메인 미니바
+    inner class Timer(private val playTime: Int, var isPlaying: Boolean = true): Thread() {
+        private var second : Int = 0
+        private var mills: Float = 0f
+
+        override fun run() {
+            super.run()
+            try {
+                while(true){
+
+                    if(second >= playTime){
+                        mediaPlayer?.pause()
+                        break
+                    }
+
+                    if(isPlaying){
+                        sleep(50)
+                        mills += 50
+
+                        runOnUiThread{
+                            binding.mainMiniplayerProgressSb.progress = ((mills / playTime) * 100).toInt()
+                        }
+
+                        if (mills % 1000 == 0f){
+                            second++
+                        }
+                    }
+                }
+            }catch (e: InterruptedException){
+                Log.d("Song", "쓰레드가 죽었습니다. ${e.message}")
+            }
+
+        }
     }
 
     private fun inputDummySongs(){
