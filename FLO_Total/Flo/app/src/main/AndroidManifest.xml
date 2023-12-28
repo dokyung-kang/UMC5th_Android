@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FLO">
         <activity
-            android:name=".SplashActivity"
+            android:name=".ui.splash.SplashActivity"
             android:exported="true"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -22,13 +22,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.main.MainActivity"
             android:exported="true"/>
         <activity
-            android:name=".SongActivity"
+            android:name=".ui.song.SongActivity"
             android:exported="true"/>
-        <activity android:name="com.example.flo.LoginActivity"/>
-        <activity android:name="com.example.flo.SignUpActivity"/>
+        <activity android:name="com.example.flo.ui.signin.LoginActivity"/>
+        <activity android:name="com.example.flo.ui.signup.SignUpActivity"/>
     </application>
 
 </manifest>
